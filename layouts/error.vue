@@ -1,20 +1,34 @@
 <template>
-  <v-app dark>
-    <h1 v-if="error.statusCode === 404">
-      {{ pageNotFound }}
-    </h1>
-    <h1 v-else>
-      {{ otherError }}
-    </h1>
-    <NuxtLink to="/">
-      Home page
-    </NuxtLink>
+  <v-app>
+    <div class="dedicated-page">
+      <main-header />
+      <Error
+        :error-code="this.error.statusCode"
+        :text="$t('common.404')"
+      />
+      <main-footer />
+    </div>
   </v-app>
 </template>
 
+<style lang="scss" scoped>
+.dedicated-page {
+  background: $palette-primary-dark;
+}
+</style>
+
 <script>
+import brand from '~/static/text/brand'
+import Header from '~/components/Header'
+import Footer from '~/components/Footer'
+import Error from '../components/Error'
+
 export default {
-  name: 'EmptyLayout',
+  components: {
+    'main-header': Header,
+    'main-footer': Footer,
+    Error
+  },
   layout: 'empty',
   props: {
     error: {
@@ -22,24 +36,20 @@ export default {
       default: null
     }
   },
-  data () {
-    return {
-      pageNotFound: '404 Not Found',
-      otherError: 'An error occurred'
-    }
-  },
-  head () {
+  head() {
     const title =
-      this.error.statusCode === 404 ? this.pageNotFound : this.otherError
+      this.error.statusCode === 404
+        ? brand.saas.name + ' - ' + this.pageNotFound
+        : brand.saas.name + ' - ' + this.otherError
     return {
       title
+    }
+  },
+  data() {
+    return {
+      pageNotFound: 'Not Found',
+      otherError: 'An error occurred'
     }
   }
 }
 </script>
-
-<style scoped>
-h1 {
-  font-size: 20px;
-}
-</style>
