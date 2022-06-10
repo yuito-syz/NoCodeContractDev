@@ -1,83 +1,139 @@
 <template>
-  <v-row justify="center" align="center">
-    <v-col cols="12" sm="8" md="6">
-      <v-card class="logo py-4 d-flex justify-center">
-        <NuxtLogo />
-        <VuetifyLogo />
-      </v-card>
-      <v-card>
-        <v-card-title class="headline">
-          Welcome to the Vuetify + Nuxt.js template
-        </v-card-title>
-        <v-card-text>
-          <p>Vuetify is a progressive Material Design component framework for Vue.js. It was designed to empower developers to create amazing applications.</p>
-          <p>
-            For more information on Vuetify, check out the <a
-              href="https://vuetifyjs.com"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              documentation
-            </a>.
-          </p>
-          <p>
-            If you have questions, please join the official <a
-              href="https://chat.vuetifyjs.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-              title="chat"
-            >
-              discord
-            </a>.
-          </p>
-          <p>
-            Find a bug? Report it on the github <a
-              href="https://github.com/vuetifyjs/vuetify/issues"
-              target="_blank"
-              rel="noopener noreferrer"
-              title="contribute"
-            >
-              issue board
-            </a>.
-          </p>
-          <p>Thank you for developing with Vuetify and I look forward to bringing more exciting features in the future.</p>
-          <div class="text-xs-right">
-            <em><small>&mdash; John Leider</small></em>
-          </div>
-          <hr class="my-3">
-          <a
-            href="https://nuxtjs.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Nuxt Documentation
-          </a>
-          <br>
-          <a
-            href="https://github.com/nuxt/nuxt.js"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Nuxt GitHub
-          </a>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer />
-          <v-btn
-            color="primary"
-            nuxt
-            to="/inspire"
-          >
-            Continue
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-col>
-  </v-row>
+  <div>
+    <div class="main-wrap">
+      <main-header />
+      <div class="container-wrap">
+        <section id="home">
+          <banner />
+        </section>
+        <section>
+          <company-logo />
+        </section>
+        <section :class="!isMobile && 'space-top-short'">
+          <counter />
+        </section>
+        <section id="feature" :class="isMobile ? 'space-top-short' : 'space-top'">
+          <feature />
+        </section>
+        <section id="testimonials" class="space-bottom-testi">
+          <testimonials />
+        </section>
+        <section id="pricing" class="space-top">
+          <pricing-plan />
+        </section>
+        <section id="faq" class="space-top-short">
+          <faq />
+        </section>
+        <section class="space-top-short space-bottom-short">
+          <news-event />
+        </section>
+      </div>
+      <section id="footer">
+        <footer-with-deco />
+      </section>
+      <hidden point="mdDown">
+        <page-nav />
+      </hidden>
+      <hidden point="mdDown">
+        <notification />
+      </hidden>
+    </div>
+  </div>
 </template>
 
+<style scoped lang="scss">
+@import '~/assets/styles';
+
+@function section-margin($margin) {
+  @return $margin * 20;
+}
+.main-wrap {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  @include palette-text-primary;
+  .theme--dark & {
+    background-color: $dark-background-default;
+  }
+  .theme--light & {
+    background-color: $light-background-paper;
+  }
+}
+.space-bottom {
+  margin-bottom: section-margin($spacing1);
+  @include breakpoints-down(sm) {
+    margin-bottom: section-margin(6px);
+  }
+}
+.space-bottom-testi {
+  @include breakpoints-up(md) {
+    margin-bottom: section-margin($spacing1);
+  }
+}
+.space-bottom-short {
+  margin-bottom: section-margin($spacing1 * 0.5);
+}
+.space-top {
+  margin-top: section-margin($spacing1);
+  @include breakpoints-down(sm) {
+    margin-top: section-margin(6px);
+  }
+}
+.space-top-short {
+  margin-top: section-margin($spacing1 * 0.5);
+}
+.container-wrap {
+  margin-top: -40px;
+  > section {
+    position: relative;
+  }
+}
+</style>
+
 <script>
+import Header from '~/components/Header'
+import Hidden from '~/components/Hidden'
+import PageNav from '~/components/PageNav'
+import Banner from '~/components/Banner'
+import CompanyLogo from '~/components/CompanyLogo'
+import Counter from '~/components/Counter'
+import Feature from '~/components/Feature'
+import Testimonials from '~/components/Testimonials'
+import PricingPlan from '~/components/PricingPlan'
+import Faq from '~/components/Faq'
+import NewsEvent from '~/components/NewsEvent'
+import FooterWithDeco from '~/components/Footer/FooterWithDeco'
+import Notification from '~/components/Notification'
+import brand from '~/static/text/brand'
+
 export default {
-  name: 'IndexPage'
+  components: {
+    'main-header': Header,
+    Banner,
+    CompanyLogo,
+    Counter,
+    Feature,
+    Testimonials,
+    PricingPlan,
+    Faq,
+    NewsEvent,
+    FooterWithDeco,
+    PageNav,
+    Hidden,
+    Notification
+  },
+  computed: {
+    isTablet() {
+      return this.$mq === 'mdDown' || this.$mq === 'smDown' || this.$mq === 'xsDown' // eslint-disable-line
+    },
+    isMobile() {
+      return this.$mq === 'smDown' || this.$mq === 'xsDown'
+    }
+  },
+  head() {
+    return {
+      title: brand.saas.name + ' - Home Page'
+    }
+  }
 }
 </script>
